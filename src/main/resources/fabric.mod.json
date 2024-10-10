@@ -11,7 +11,7 @@
 		"homepage": "https://github.com/cheyao/minecraft-plugin",
 		"sources": "https://github.com/cheyao/minecraft-plugin"
 	},
-	"license": "CC0-1.0",
+	"license": "ZLIB",
 	"icon": "assets/2d-minecraft/icon.png",
 	"environment": "*",
 	"entrypoints": {
@@ -27,8 +27,5 @@
 		"minecraft": "~1.21.1",
 		"java": ">=21",
 		"fabric-api": "*"
-	},
-	"suggests": {
-		"another-mod": "*"
 	}
 }
