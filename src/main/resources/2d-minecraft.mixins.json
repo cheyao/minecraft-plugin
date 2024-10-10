@@ -3,7 +3,9 @@
 	"package": "com.cyao.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-      "CameraMixin"
+        "CameraMixin",
+		"GameOptionsMixin",
+		"HUDMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
