@@ -5,7 +5,7 @@
 	"mixins": [
         "CameraMixin",
 		"GameOptionsMixin",
-		"HUDMixin"
+		"ChunkMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

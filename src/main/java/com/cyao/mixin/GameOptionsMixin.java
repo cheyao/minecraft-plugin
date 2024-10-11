@@ -16,7 +16,7 @@ public class GameOptionsMixin {
     }
 
     @Redirect(method = "getPerspective", at = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;perspective:Lnet/minecraft/client/option/Perspective;", opcode = Opcodes.GETFIELD))
-    private Perspective injected(GameOptions instance) {
+    private Perspective getPerspective(GameOptions instance) {
         return Perspective.THIRD_PERSON_BACK;
     }
 }
