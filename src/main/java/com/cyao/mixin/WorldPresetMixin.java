@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(WorldPresets.Registrar.class)
 public abstract class WorldPresetMixin {
     @Unique
-    private static final RegistryKey<WorldPreset> PAPER_WORLD = RegistryKey.of(RegistryKeys.WORLD_PRESET, Identifier.of("flat-minecraft:2D-world"));
+    private static final RegistryKey<WorldPreset> PAPER_WORLD = RegistryKey.of(RegistryKeys.WORLD_PRESET, Identifier.of("flat-minecraft:paper-world"));
     @Shadow
     protected abstract void register(RegistryKey<WorldPreset> key, DimensionOptions dimensionOptions);
     @Shadow
@@ -33,7 +33,7 @@ public abstract class WorldPresetMixin {
     @Shadow @Final private RegistryEntryLookup<MultiNoiseBiomeSourceParameterList> multiNoisePresetLookup;
     @Shadow @Final private RegistryEntryLookup<ChunkGeneratorSettings> chunkGeneratorSettingsLookup;
 
-    @Inject(method = "bootstrap()V", at = @At("RETURN"))
+    @Inject(method = "bootstrap(Lnet/minecraft/world/biome/source/BiomeSource;)V", at = @At("RETURN"))
     private void addPresets(CallbackInfo ci) {
         RegistryEntry.Reference<MultiNoiseBiomeSourceParameterList> reference = this.multiNoisePresetLookup
                 .getOrThrow(MultiNoiseBiomeSourceParameterLists.OVERWORLD);

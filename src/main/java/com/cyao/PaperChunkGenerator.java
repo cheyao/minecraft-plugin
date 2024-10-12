@@ -205,7 +205,7 @@ public class PaperChunkGenerator extends ChunkGenerator {
                     generationShapeConfig,
                     DensityFunctionTypes.Beardifier.INSTANCE,
                     this.settings.value(),
-                    (AquiferSampler.FluidLevelSampler)this.fluidLevelSampler.get(),
+                    this.fluidLevelSampler.get(),
                     Blender.getNoBlending()
             );
             chunkNoiseSampler.sampleStartDensity();
@@ -296,9 +296,6 @@ public class PaperChunkGenerator extends ChunkGenerator {
                 chunkx -> this.createChunkNoiseSampler(chunkx, structureAccessor, Blender.getBlender(chunkRegion), noiseConfig)
         );
         AquiferSampler aquiferSampler = chunkNoiseSampler.getAquiferSampler();
-        CarverContext carverContext = new CarverContext(
-                this, chunkRegion.getRegistryManager(), chunk.getHeightLimitView(), chunkNoiseSampler, noiseConfig, this.settings.value().surfaceRule()
-        );
         CarvingMask carvingMask = ((ProtoChunk)chunk).getOrCreateCarvingMask(carverStep);
 
         for (int j = -8; j <= 8; j++) {
@@ -318,7 +315,7 @@ public class PaperChunkGenerator extends ChunkGenerator {
                     ConfiguredCarver<?> configuredCarver = registryEntry.value();
                     chunkRandom.setCarverSeed(seed + (long)l, chunkPos2.x, chunkPos2.z);
                     if (configuredCarver.shouldCarve(chunkRandom)) {
-                        configuredCarver.carve(carverContext, chunk, biomeAccess2::getBiome, chunkRandom, aquiferSampler, chunkPos2, carvingMask);
+                        // configuredCarver.carve(carverContext, chunk, biomeAccess2::getBiome, chunkRandom, aquiferSampler, chunkPos2, carvingMask);
                     }
 
                     l++;
@@ -336,7 +333,7 @@ public class PaperChunkGenerator extends ChunkGenerator {
         return k <= 0 ? CompletableFuture.completedFuture(chunk) : CompletableFuture.supplyAsync(Util.debugSupplier("wgen_fill_noise", () -> {
             int l = chunk.getSectionIndex(k * generationShapeConfig.verticalCellBlockCount() - 1 + i);
             int m = chunk.getSectionIndex(i);
-            Set<ChunkSection> set = Sets.<ChunkSection>newHashSet();
+            Set<ChunkSection> set = Sets.newHashSet();
 
             for (int n = l; n >= m; n--) {
                 ChunkSection chunkSection = chunk.getSection(n);

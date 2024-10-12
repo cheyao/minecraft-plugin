@@ -12,7 +12,7 @@
 		"sources": "https://github.com/cheyao/minecraft-plugin"
 	},
 	"license": "ZLIB",
-	"icon": "assets/2d-minecraft/icon.png",
+	"icon": "assets/flat-minecraft/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
