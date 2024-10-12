@@ -1,6 +1,6 @@
 {
 	"schemaVersion": 1,
-	"id": "d-minecraft",
+	"id": "flat-minecraft",
 	"version": "1.0",
 	"name": "2D minecraft",
 	"description": "2D Minecraft!",
@@ -27,5 +27,6 @@
 		"minecraft": "~1.21.1",
 		"java": ">=21",
 		"fabric-api": "*"
-	}
+	},
+	"accessWidener" : "flat-minecraft.accesswidener"
 }
