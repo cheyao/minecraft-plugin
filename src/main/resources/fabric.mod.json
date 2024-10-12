@@ -16,11 +16,11 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.cyao.DMinecraft"
+			"com.cyao.FlatMinecraft"
 		]
 	},
 	"mixins": [
-		"2d-minecraft.mixins.json"
+		"flat-minecraft.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.16.5",
