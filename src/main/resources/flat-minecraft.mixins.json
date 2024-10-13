@@ -5,7 +5,7 @@
 	"mixins": [
         "CameraMixin",
 		"GameOptionsMixin",
-		"ChunkMixin"
+		"WordPresetMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
