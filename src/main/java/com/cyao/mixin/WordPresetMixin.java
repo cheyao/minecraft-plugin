@@ -36,10 +36,12 @@ public abstract class WordPresetMixin {
 
     @Inject(method = "bootstrap()V", at = @At("RETURN"), remap = false)
     private void addPresets(CallbackInfo ci) {
+        /*
         this.register(PAPER_WORLD, this.createOverworldOptions(
                 new PaperWorldGenerator(
                         MultiNoiseBiomeSource.create(this.multiNoisePresetLookup.getOrThrow(MultiNoiseBiomeSourceParameterLists.OVERWORLD)),
                         this.chunkGeneratorSettingsLookup.getOrThrow(ChunkGeneratorSettings.OVERWORLD))
         ));
+         */
     }
 }
