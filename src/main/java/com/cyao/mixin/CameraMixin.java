@@ -1,11 +1,10 @@
 package com.cyao.mixin;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Camera.class)
 public class CameraMixin {
@@ -27,12 +26,8 @@ public class CameraMixin {
 	}
 
 	// Offset the camera a bit more
-	@ModifyArg(
-			method = "update(Lnet/minecraft/world/BlockView;Lnet/minecraft/entity/Entity;ZZF)V",
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/Camera;moveBy(FFF)V"),
-			index = 0
-	)
-	protected float offsetCamera(float x) {
-		return x - 4.0f;
+	@Redirect(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/Camera;clipToSpace(F)F"))
+	protected float offsetCamera(Camera instance, float f) {
+		return f + 5.0f;
 	}
 }
