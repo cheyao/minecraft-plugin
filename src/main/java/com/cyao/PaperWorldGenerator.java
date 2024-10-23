@@ -19,6 +19,7 @@ import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.*;
 import net.minecraft.world.gen.noise.NoiseConfig;
 
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -42,28 +43,45 @@ public class PaperWorldGenerator extends NoiseChunkGenerator {
         int i = generationShapeConfig.minimumY();
         int j = MathHelper.floorDiv(i, generationShapeConfig.verticalCellBlockCount());
         int k = MathHelper.floorDiv(generationShapeConfig.height(), generationShapeConfig.verticalCellBlockCount());
-        return k <= 0 ? CompletableFuture.completedFuture(chunk) : CompletableFuture.supplyAsync(Util.debugSupplier("wgen_fill_noise", () -> {
+        return k <= 0 ? CompletableFuture.completedFuture(chunk) : CompletableFuture.supplyAsync(() -> {
             int l = chunk.getSectionIndex(k * generationShapeConfig.verticalCellBlockCount() - 1 + i);
             int m = chunk.getSectionIndex(i);
-            Set<ChunkSection> set = Sets.<ChunkSection>newHashSet();
+            Set<ChunkSection> set = Sets.newHashSet();
 
-            for (int n = l; n >= m; n--) {
+            for(int n = l; n >= m; --n) {
                 ChunkSection chunkSection = chunk.getSection(n);
                 chunkSection.lock();
                 set.add(chunkSection);
             }
 
-            Chunk var20;
+            boolean var19 = false;
+
+            Chunk var21;
             try {
-                var20 = this.populateNoise(blender, structureAccessor, noiseConfig, chunk, j, k);
+                var19 = true;
+                var21 = this.populateNoise(blender, structureAccessor, noiseConfig, chunk, j, k);
+                var19 = false;
             } finally {
-                for (ChunkSection chunkSection3 : set) {
-                    chunkSection3.unlock();
+                if (var19) {
+                    Iterator var16 = set.iterator();
+
+                    while(var16.hasNext()) {
+                        ChunkSection chunkSection3 = (ChunkSection)var16.next();
+                        chunkSection3.unlock();
+                    }
+
                 }
             }
 
-            return var20;
-        }), Util.getMainWorkerExecutor());
+            Iterator var22 = set.iterator();
+
+            while(var22.hasNext()) {
+                ChunkSection chunkSection2 = (ChunkSection)var22.next();
+                chunkSection2.unlock();
+            }
+
+            return var21;
+        }, Util.getMainWorkerExecutor().named("wgen_fill_noise"));
     }
 
     private Chunk populateNoise(Blender blender, StructureAccessor structureAccessor, NoiseConfig noiseConfig, Chunk chunk, int minimumCellY, int cellHeight) {
