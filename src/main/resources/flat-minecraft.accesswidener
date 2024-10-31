@@ -8,21 +8,3 @@ accessible method net/minecraft/world/gen/chunk/ChunkNoiseSampler sampleBlockSta
 extendable class net/minecraft/world/gen/chunk/NoiseChunkGenerator
 accessible method net/minecraft/world/gen/chunk/NoiseChunkGenerator createChunkNoiseSampler (Lnet/minecraft/world/chunk/Chunk;Lnet/minecraft/world/gen/StructureAccessor;Lnet/minecraft/world/gen/chunk/Blender;Lnet/minecraft/world/gen/noise/NoiseConfig;)Lnet/minecraft/world/gen/chunk/ChunkNoiseSampler;
 accessible method net/minecraft/world/gen/chunk/NoiseChunkGenerator getBlockState (Lnet/minecraft/world/gen/chunk/ChunkNoiseSampler;IIILnet/minecraft/block/BlockState;)Lnet/minecraft/block/BlockState;
-
-accessible method net/minecraft/server/network/ServerPlayNetworkHandler isHost ()Z
-
-accessible field net/minecraft/server/network/ServerPlayNetworkHandler requestedTeleportPos Lnet/minecraft/util/math/Vec3d;
-accessible field net/minecraft/server/network/ServerPlayNetworkHandler lastTickX D
-accessible field net/minecraft/server/network/ServerPlayNetworkHandler lastTickY D
-accessible field net/minecraft/server/network/ServerPlayNetworkHandler lastTickZ D
-accessible field net/minecraft/server/network/ServerPlayNetworkHandler movePacketsCount I
-accessible field net/minecraft/server/network/ServerPlayNetworkHandler lastTickMovePacketsCount I
-
-accessible field net/minecraft/server/network/ServerPlayNetworkHandler lastTickRiddenX D
-accessible field net/minecraft/server/network/ServerPlayNetworkHandler lastTickRiddenY D
-accessible field net/minecraft/server/network/ServerPlayNetworkHandler lastTickRiddenZ D
-accessible field net/minecraft/server/network/ServerPlayNetworkHandler connection Lnet/minecraft/network/ClientConnection;
-
-accessible field net/minecraft/server/network/ServerPlayNetworkHandler updatedRiddenX D
-accessible field net/minecraft/server/network/ServerPlayNetworkHandler updatedRiddenY D
-accessible field net/minecraft/server/network/ServerPlayNetworkHandler updatedRiddenZ D
