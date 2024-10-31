@@ -13,10 +13,8 @@ public class FlatMinecraft implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		LOGGER.info("Initializing mod");
+		LOGGER.info("Initializing 2D Minecraft");
 
-		Registry.register(Registries.CHUNK_GENERATOR,
-				Identifier.of(MOD_ID, "paper_world"),
-				PaperWorldGenerator.CODEC);
+		Registry.register(Registries.CHUNK_GENERATOR, Identifier.of(MOD_ID, "paper_world"), PaperWorldGenerator.CODEC);
 	}
 }

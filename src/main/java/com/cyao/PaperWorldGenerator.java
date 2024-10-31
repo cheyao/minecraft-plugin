@@ -53,15 +53,15 @@ public class PaperWorldGenerator extends NoiseChunkGenerator {
                 set.add(chunkSection);
             }
 
-            boolean var19 = false;
+            boolean updatingChunk = false;
 
-            Chunk var21;
+            Chunk newChunk;
             try {
-                var19 = true;
-                var21 = this.populateNoise(blender, structureAccessor, noiseConfig, chunk, j, k);
-                var19 = false;
+                updatingChunk = true;
+                newChunk = this.populateNoise(blender, structureAccessor, noiseConfig, chunk, j, k);
+                updatingChunk = false;
             } finally {
-                if (var19) {
+                if (updatingChunk) {
                     for (ChunkSection chunkSection3 : set) {
                         chunkSection3.unlock();
                     }
@@ -72,7 +72,7 @@ public class PaperWorldGenerator extends NoiseChunkGenerator {
                 chunkSection2.unlock();
             }
 
-            return var21;
+            return newChunk;
         }, Util.getMainWorkerExecutor().named("wgen_fill_noise"));
     }
 
@@ -83,66 +83,63 @@ public class PaperWorldGenerator extends NoiseChunkGenerator {
         Heightmap heightmap = chunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG);
         Heightmap heightmap2 = chunk.getHeightmap(Heightmap.Type.WORLD_SURFACE_WG);
         ChunkPos chunkPos = chunk.getPos();
-        int i = chunkPos.getStartX();
-        int j = chunkPos.getStartZ();
+        int startX = chunkPos.getStartX();
+        int startZ = chunkPos.getStartZ();
         AquiferSampler aquiferSampler = chunkNoiseSampler.getAquiferSampler();
         chunkNoiseSampler.sampleStartDensity();
         BlockPos.Mutable mutable = new BlockPos.Mutable();
-        int k = chunkNoiseSampler.getHorizontalCellBlockCount();
-        int l = chunkNoiseSampler.getVerticalCellBlockCount();
-        int m = 16 / k;
-        int n = 16 / k;
+        int horizBlockCount = chunkNoiseSampler.getHorizontalCellBlockCount();
+        int vertBlockCount = chunkNoiseSampler.getVerticalCellBlockCount();
+        int horizontalDensity = 16 / horizBlockCount;
 
-        for (int o = 0; o < m; o++) {
-            chunkNoiseSampler.sampleEndDensity(o);
+        for (int horiz1 = 0; horiz1 < horizontalDensity; horiz1++) {
+            chunkNoiseSampler.sampleEndDensity(horiz1)0b1 (int horiz2 = 0; horiz2 < horizontalDensity; horiz2++) {
+                int verticalSectionCount = chunk.countVerticalSections() - 1;
+                ChunkSection chunkSection = chunk.getSection(verticalSectionCount);
 
-            for (int p = 0; p < n; p++) {
-                int q = chunk.countVerticalSections() - 1;
-                ChunkSection chunkSection = chunk.getSection(q);
+                for (int height = cellHeight - 1; height >= 0; height--) {
+                    chunkNoiseSampler.onSampledCellCorners(height, horiz2);
 
-                for (int r = cellHeight - 1; r >= 0; r--) {
-                    chunkNoiseSampler.onSampledCellCorners(r, p);
-
-                    for (int s = l - 1; s >= 0; s--) {
-                        int t = (minimumCellY + r) * l + s;
-                        int u = t & 15;
+                    for (int layer = vertBlockCount - 1; layer >= 0; layer--) {
+                        int t = (minimumCellY + height) * vertBlockCount + layer;
+                        int u = t & 0b1111;
                         int v = chunk.getSectionIndex(t);
-                        if (q != v) {
-                            q = v;
+                        if (verticalSectionCount != v) {
+                            verticalSectionCount = v;
                             chunkSection = chunk.getSection(v);
                         }
 
-                        double d = (double)s / (double)l;
-                        chunkNoiseSampler.interpolateY(t, d);
+                        double normalLayer = (double)layer / (double)vertBlockCount;
+                        chunkNoiseSampler.interpolateY(t, normalLayer);
 
-                        for (int w = 0; w < k; w++) {
-                            int x = i + o * k + w;
-                            int y = x & 15;
-                            double e = (double)w / (double)k;
+                        for (int w = 0; w < horizBlockCount; w++) {
+                            int x = startX + horiz1 * horizBlockCount + w;
+                            int y = x & 0b1111;
+                            double e = (double)w / (double)horizBlockCount;
                             chunkNoiseSampler.interpolateX(x, e);
 
-                            for (int z = 0; z < k; z++) {
-                                int aa = j + p * k + z;
-                                int ab = aa & 15;
-                                double f = (double)z / (double)k;
-                                chunkNoiseSampler.interpolateZ(aa, f);
+                            for (int z = 0; z < horizBlockCount; z++) {
+                                int blockZ = startZ + horiz2 * horizBlockCount + z;
+                                double normalZ = (double)z / (double)horizBlockCount;
+                                chunkNoiseSampler.interpolateZ(blockZ, normalZ);
                                 BlockState blockState = chunkNoiseSampler.sampleBlockState();
+
+                                if (blockZ < -1 || blockZ > 1) {
+                                    continue;
+                                }
+
                                 if (blockState == null) {
                                     blockState = this.getSettings().value().defaultBlock();
                                 }
 
-                                if (aa != -1 && aa != 0 && aa != 1) {
-                                    blockState = AIR;
-                                    continue;
-                                }
-
-                                blockState = super.getBlockState(chunkNoiseSampler, x, t, aa, blockState);
+                                int maskedBlockZ = blockZ & 0b1111;
+                                blockState = super.getBlockState(chunkNoiseSampler, x, t, blockZ, blockState);
                                 if (blockState != AIR && !SharedConstants.isOutsideGenerationArea(chunk.getPos())) {
-                                    chunkSection.setBlockState(y, u, ab, blockState, false);
-                                    heightmap.trackUpdate(y, t, ab, blockState);
-                                    heightmap2.trackUpdate(y, t, ab, blockState);
+                                    chunkSection.setBlockState(y, u, maskedBlockZ, blockState, false);
+                                    heightmap.trackUpdate(y, t, maskedBlockZ, blockState);
+                                    heightmap2.trackUpdate(y, t, maskedBlockZ, blockState);
                                     if (aquiferSampler.needsFluidTick() && !blockState.getFluidState().isEmpty()) {
-                                        mutable.set(x, t, aa);
+                                        mutable.set(x, t, blockZ);
                                         chunk.markBlockForPostProcessing(mutable);
                                     }
                                 }
