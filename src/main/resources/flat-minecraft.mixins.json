@@ -1,13 +1,14 @@
 {
-	"required": true,
-	"package": "com.cyao.mixin",
-	"compatibilityLevel": "JAVA_21",
-	"mixins": [
-        "CameraMixin",
-		"GameOptionsMixin",
-		"PlayerEntityMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
+  "required": true,
+  "package": "com.cyao.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "CameraMixin",
+    "EntityMixin",
+    "GameOptionsMixin",
+    "PlayerEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
 	}
 }

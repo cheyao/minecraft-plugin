@@ -19,7 +19,6 @@ import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.*;
 import net.minecraft.world.gen.noise.NoiseConfig;
 
-import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -63,20 +62,13 @@ public class PaperWorldGenerator extends NoiseChunkGenerator {
                 var19 = false;
             } finally {
                 if (var19) {
-                    Iterator var16 = set.iterator();
-
-                    while(var16.hasNext()) {
-                        ChunkSection chunkSection3 = (ChunkSection)var16.next();
+                    for (ChunkSection chunkSection3 : set) {
                         chunkSection3.unlock();
                     }
-
                 }
             }
 
-            Iterator var22 = set.iterator();
-
-            while(var22.hasNext()) {
-                ChunkSection chunkSection2 = (ChunkSection)var22.next();
+            for (ChunkSection chunkSection2 : set) {
                 chunkSection2.unlock();
             }
 
